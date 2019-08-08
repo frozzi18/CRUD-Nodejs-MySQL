@@ -10,7 +10,8 @@ var mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'employeedb'
+    database: 'employeedb',
+    multipleStatements:true
 })
 
 mysqlConnection.connect((err) => {
@@ -48,6 +49,19 @@ app.delete('/employees/:id',(req,res)=>{
     mysqlConnection.query('DELETE FROM Employee WHERE EmpID = ?',[req.params.id], (err, rows, fields)=>{
         if(!err)
         res.send('Deleted successfully')
+        else
+        console.log(err);
+    })
+})
+
+//Insert an employees
+app.post('/employees',(req,res)=>{
+    let emp = req.body;
+    var sql = "SET @EmpID = ?; SET @Name = ?; SET @EmpCode = ?; SET @Salary = ?; \
+    CALL EmployeeAddOrEdit(@EmpID,@Name,@EmpCode,@Salary); ";
+    mysqlConnection.query(sql,[emp.EmpID, emp.Name, emp.EmpCode, emp.Salary], (err, rows, fields)=>{
+        if(!err)
+        res.send(rows)
         else
         console.log(err);
     })
