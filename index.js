@@ -32,3 +32,25 @@ app.get('/employees',(req,res)=>{
         console.log(err);
     })
 })
+
+//Get an employees
+app.get('/employees/:id',(req,res)=>{
+    mysqlConnection.query('SELECT * FROM Employee WHERE EmpID = ?',[req.params.id], (err, rows, fields)=>{
+        if(!err)
+        res.send(rows)
+        else
+        console.log(err);
+    })
+})
+
+//Delete an employees
+app.delete('/employees/:id',(req,res)=>{
+    mysqlConnection.query('DELETE FROM Employee WHERE EmpID = ?',[req.params.id], (err, rows, fields)=>{
+        if(!err)
+        res.send('Deleted successfully')
+        else
+        console.log(err);
+    })
+})
+
+
